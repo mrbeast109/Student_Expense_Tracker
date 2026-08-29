@@ -82,7 +82,11 @@ export function AuthProvider({ children }) {
     try {
       return await signInWithEmailAndPassword(auth, email, password);
     } catch (err) {
-      if (err.code === "auth/configuration-not-found") {
+      if (
+        err.code === "auth/configuration-not-found" ||
+        err.code === "auth/network-request-failed" ||
+        err.message?.includes("network")
+      ) {
         return await loginDemo(email);
       }
       throw err;
@@ -95,7 +99,11 @@ export function AuthProvider({ children }) {
       await updateProfile(cred.user, { displayName: name });
       return cred;
     } catch (err) {
-      if (err.code === "auth/configuration-not-found") {
+      if (
+        err.code === "auth/configuration-not-found" ||
+        err.code === "auth/network-request-failed" ||
+        err.message?.includes("network")
+      ) {
         return await loginDemo(email, name);
       }
       throw err;

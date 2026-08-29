@@ -20,6 +20,8 @@ api.interceptors.request.use(async (config) => {
         }
       } catch (e) {
       }
+    } else {
+      config.headers.Authorization = `Bearer demo-token-test@campuspay.edu`;
     }
   }
   return config;
