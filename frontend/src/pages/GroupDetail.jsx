@@ -359,27 +359,41 @@ function SettleUp({ group, settlements, onSettled }) {
 
   return (
     <div className="receipt" style={{ border: "1px solid var(--line)", borderRadius: "var(--radius)", boxShadow: "var(--shadow-card)" }}>
-      {settlements.transactions.map((t, i) => (
-        <div key={i} className="receipt-row">
-          <div className="receipt-meta">
-            <p className="receipt-meta-title">
-              <span style={{ color: "var(--coral)" }}>{t.from.name}</span>
-              <span style={{ color: "var(--muted)", margin: "0 5px" }}>→</span>
-              <span style={{ color: "var(--teal)" }}>{t.to.name}</span>
-            </p>
+      {settlements.transactions.map((t, i) => {
+        const upiTarget = t.to?.upiId ? t.to.upiId : null;
+        return (
+          <div key={i} className="receipt-row">
+            <div className="receipt-meta">
+              <p className="receipt-meta-title">
+                <span style={{ color: "var(--coral)" }}>{t.from.name}</span>
+                <span style={{ color: "var(--muted)", margin: "0 5px" }}>→</span>
+                <span style={{ color: "var(--teal)" }}>{t.to.name}</span>
+              </p>
+              {upiTarget && (
+                <p className="receipt-meta-sub" style={{ marginTop: 2 }}>
+                  UPI ID: <span style={{ fontWeight: 600, color: "var(--ink)" }}>{upiTarget}</span>
+                </p>
+              )}
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+              <span className="receipt-amount" style={{ minWidth: "auto" }}>₹{t.amount.toFixed(2)}</span>
+              {t.upiLink ? (
+                <a href={t.upiLink} className="btn ghost" style={{ padding: "4px 10px", fontSize: "0.7rem", textDecoration: "none" }}>
+                  Pay via UPI
+                </a>
+              ) : (
+                <span style={{ fontSize: "0.68rem", color: "var(--muted)", fontStyle: "italic" }}>
+                  No UPI ID
+                </span>
+              )}
+              <button onClick={() => markPaid(t)} disabled={recording === `${t.from._id}-${t.to._id}`}
+                className="btn gold" style={{ padding: "4px 10px", fontSize: "0.7rem" }}>
+                {recording === `${t.from._id}-${t.to._id}` ? "Saving…" : "Mark paid"}
+              </button>
+            </div>
           </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-            <span className="receipt-amount" style={{ minWidth: "auto" }}>₹{t.amount.toFixed(2)}</span>
-            {t.upiLink && (
-              <a href={t.upiLink} className="btn ghost" style={{ padding: "4px 10px", fontSize: "0.7rem" }}>Pay via UPI</a>
-            )}
-            <button onClick={() => markPaid(t)} disabled={recording === `${t.from._id}-${t.to._id}`}
-              className="btn gold" style={{ padding: "4px 10px", fontSize: "0.7rem" }}>
-              Mark paid
-            </button>
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

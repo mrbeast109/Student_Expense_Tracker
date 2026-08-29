@@ -3,24 +3,33 @@ import GroupBill from "../models/GroupBill.js";
 import User from "../models/User.js";
 
 export const createGroup = async (req, res) => {
-  const { name, type, memberEmails = [] } = req.body;
+  try {
+    const { name, type, memberEmails = [] } = req.body;
 
-  const members = [req.user._id];
-  if (memberEmails.length) {
-    const foundUsers = await User.find({ email: { $in: memberEmails } });
-    for (const u of foundUsers) {
-      if (!members.some((m) => m.equals(u._id))) members.push(u._id);
+    const validTypes = ["roommates", "trip", "project", "mess", "other"];
+    const groupType = validTypes.includes(type) ? type : "other";
+
+    const members = [req.user._id];
+    if (memberEmails.length) {
+      const foundUsers = await User.find({ email: { $in: memberEmails } });
+      for (const u of foundUsers) {
+        if (!members.some((m) => m.equals(u._id))) members.push(u._id);
+      }
     }
+
+    const group = await Group.create({
+      name,
+      type: groupType,
+      members,
+      createdBy: req.user._id,
+    });
+
+    const populatedGroup = await group.populate("members", "name email photoURL upiId");
+    res.status(201).json(populatedGroup);
+  } catch (error) {
+    console.error("Error creating group:", error);
+    res.status(500).json({ message: "Failed to create group", error: error.message });
   }
-
-  const group = await Group.create({
-    name,
-    type: type || "other",
-    members,
-    createdBy: req.user._id,
-  });
-
-  res.status(201).json(await group.populate("members", "name email photoURL upiId"));
 };
 
 export const getMyGroups = async (req, res) => {

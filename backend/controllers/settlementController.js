@@ -25,19 +25,30 @@ export const getSimplifiedSettlements = async (req, res) => {
 
   const memberMap = Object.fromEntries(group.members.map((m) => [m._id.toString(), m]));
 
-  const enriched = transactions.map((t) => ({
-    from: memberMap[t.from],
-    to: memberMap[t.to],
-    amount: t.amount,
-    upiLink: memberMap[t.to]?.upiId
+  const defaultPayeeName = process.env.DEFAULT_UPI_PAYEE_NAME || "Tally+";
+
+  const enriched = transactions.map((t) => {
+    const payee = memberMap[t.to];
+    const payeeUpiId = payee?.upiId || (process.env.DEFAULT_UPI_ID || "");
+    const payeeName = payee?.name || defaultPayeeName;
+
+    const upiLink = payeeUpiId
       ? buildUpiLink({
-          payeeUpiId: memberMap[t.to].upiId,
-          payeeName: memberMap[t.to].name,
+          payeeUpiId,
+          payeeName,
           amount: t.amount,
           note: `${group.name} settlement`,
+          transactionRefId: `CP-${group._id.toString().slice(-6)}-${Date.now().toString().slice(-6)}`,
         })
-      : null,
-  }));
+      : null;
+
+    return {
+      from: memberMap[t.from],
+      to: memberMap[t.to],
+      amount: t.amount,
+      upiLink,
+    };
+  });
 
   res.json({ balances, transactions: enriched });
 };

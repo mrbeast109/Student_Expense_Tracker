@@ -50,7 +50,7 @@ export default function Login() {
           <div style={{ width: 32, height: 32, borderRadius: 7, background: "var(--ink)", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <span style={{ fontFamily: "'Space Mono', monospace", fontWeight: 700, color: "var(--marigold)", fontSize: "0.9rem" }}>₹</span>
           </div>
-          <span style={{ fontWeight: 800, fontSize: "1.1rem", color: "var(--ink)", letterSpacing: "-0.02em" }}>CampusPay</span>
+          <span style={{ fontWeight: 800, fontSize: "1.1rem", color: "var(--ink)", letterSpacing: "-0.02em" }}>Tally+</span>
         </div>
 
         <div className="card" style={{ padding: 24 }}>

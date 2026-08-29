@@ -27,20 +27,21 @@ export const createGroupBill = async (req, res) => {
       receiptHash,
     } = req.body;
 
-    if (!memberIds.includes(paidBy)) {
+    const payer = paidBy || req.user._id.toString();
+    if (!memberIds.includes(payer)) {
       return res.status(400).json({ message: "paidBy must be a group member" });
     }
 
     let splits;
     let linkedExpense = null;
 
-    if (splitType === "equal") {
+    if (splitType === "equal" || splitType === "EQUAL") {
       splits = calculateEqualSplit(totalAmount, memberIds);
-    } else if (splitType === "custom") {
+    } else if (splitType === "custom" || splitType === "CUSTOM") {
       splits = calculateCustomSplit(customAmounts);
-    } else if (splitType === "percentage") {
+    } else if (splitType === "percentage" || splitType === "PERCENTAGE") {
       splits = calculatePercentageSplit(totalAmount, percentages);
-    } else if (splitType === "itemized") {
+    } else if (splitType === "itemized" || splitType === "ITEMIZED") {
       splits = calculateItemizedSplit(items, tax || 0);
 
       linkedExpense = await Expense.create({
@@ -62,7 +63,7 @@ export const createGroupBill = async (req, res) => {
     const bill = await GroupBill.create({
       group: group._id,
       description,
-      paidBy,
+      paidBy: payer,
       totalAmount,
       splitType,
       splits,

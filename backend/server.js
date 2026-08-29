@@ -30,5 +30,5 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 5000;
 
 connectDB().then(() => {
-  app.listen(PORT, () => console.log(`CampusPay backend running on port ${PORT}`));
+  app.listen(PORT, () => console.log(`Tally+ backend running on port ${PORT}`));
 });

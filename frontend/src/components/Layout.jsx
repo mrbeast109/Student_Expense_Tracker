@@ -27,11 +27,13 @@ export default function Layout({ children }) {
       <aside
         className="hidden lg:flex"
         style={{
-          width: 220,
+          width: 230,
           flexDirection: "column",
-          borderRight: "1px solid var(--line)",
-          background: "var(--card)",
-          padding: "20px 12px",
+          borderRight: "1px solid var(--glass-border)",
+          background: "var(--glass-bg)",
+          backdropFilter: "var(--glass-blur)",
+          WebkitBackdropFilter: "var(--glass-blur)",
+          padding: "24px 16px",
           flexShrink: 0,
         }}
       >
@@ -42,15 +44,17 @@ export default function Layout({ children }) {
         <UserFooter profile={profile} onLogout={handleLogout} />
       </aside>
 
+      {/* Mobile top header bar with hamburger menu - strictly hidden on desktop */}
       <div
-        className="lg:hidden"
+        className="flex lg:hidden"
         style={{
           position: "fixed", top: 0, left: 0, right: 0, zIndex: 40,
-          background: "var(--card)",
-          borderBottom: "1px solid var(--line)",
+          background: "var(--glass-bg)",
+          backdropFilter: "var(--glass-blur)",
+          WebkitBackdropFilter: "var(--glass-blur)",
+          borderBottom: "1px solid var(--glass-border)",
           padding: "0 16px",
           height: 50,
-          display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
         }}
@@ -77,7 +81,7 @@ export default function Layout({ children }) {
       </div>
 
       {mobileOpen && (
-        <div style={{ position: "fixed", inset: 0, zIndex: 50, display: "flex" }}>
+        <div className="lg:hidden" style={{ position: "fixed", inset: 0, zIndex: 50, display: "flex" }}>
           <div
             style={{ position: "absolute", inset: 0, background: "rgba(22,38,42,0.35)" }}
             onClick={() => setMobileOpen(false)}
@@ -141,7 +145,7 @@ function Brand({ compact }) {
       </div>
       {!compact && (
         <span style={{ fontWeight: 800, fontSize: "0.95rem", color: "var(--ink)", letterSpacing: "-0.02em" }}>
-          CampusPay
+          Tally+
         </span>
       )}
     </div>
@@ -157,15 +161,16 @@ function NavItem({ to, label, Icon, end, onClick }) {
       style={({ isActive }) => ({
         display: "flex",
         alignItems: "center",
-        gap: 9,
-        padding: "8px 12px",
-        borderRadius: 8,
-        fontSize: "0.82rem",
-        fontWeight: 600,
+        gap: 10,
+        padding: "9px 14px",
+        borderRadius: 12,
+        fontSize: "0.84rem",
+        fontWeight: isActive ? 700 : 600,
         textDecoration: "none",
-        transition: "background 100ms, color 100ms",
+        transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
         background: isActive ? "var(--ink)" : "transparent",
-        color: isActive ? "#fff" : "var(--muted)",
+        color: isActive ? "#ffffff" : "var(--muted)",
+        boxShadow: isActive ? "0 4px 12px rgba(15, 23, 42, 0.15)" : "none",
       })}
     >
       <Icon size={15} strokeWidth={isActive => isActive ? 2.5 : 2} />

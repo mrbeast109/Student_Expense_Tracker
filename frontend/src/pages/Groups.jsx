@@ -91,7 +91,7 @@ export default function Groups() {
                 + Add another
               </button>
               <p style={{ fontSize: "0.68rem", color: "var(--muted)", marginTop: 4 }}>
-                They need to already have a CampusPay account.
+                They need to already have a Tally+ account.
               </p>
             </div>
             {error && <div className="form-error"><span>{error}</span></div>}

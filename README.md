@@ -1,4 +1,4 @@
-# CampusPay — Smart Student Expense & Group-Bill Splitting System
+# Tally+ — Smart Student Expense & Group-Bill Splitting System
 
 Built for SIH problem statement: **Smart Student Expense & Group-Bill Splitting System with OCR Receipt Parser**
 
